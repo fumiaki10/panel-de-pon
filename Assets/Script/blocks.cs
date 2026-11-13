@@ -4,6 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.PlayerLoop;
+//　型を定義することで当たり判定を取得時どのパネルなのか判断させる
  public enum PanelType
   {
     Circle,
@@ -14,11 +15,12 @@ using UnityEngine.PlayerLoop;
   }
 public class blocks:MonoBehaviour
 {
-   
+   // パネルを入れておく配列
   public GameObject[] PanelPrefabs;
 
 [System.NonSerialized]
-  public GameObject[,] board = new GameObject[6,8];
+// ボードの作成
+  public GameObject[,] board = new GameObject[6,9];
   
   void Start()
   {
@@ -66,13 +68,14 @@ CheckMatches();
     // PanelType type = board[x,y].GetComponent<Panel>().myType;
     for(int x = 0;x <= 3; x++)
     {
-      for(int y = 0;y <= 7; y++)
+      for(int y = 0;y <= 8; y++)
       {
         if(board[x,y] != null && board[x + 1,y] != null && board[x + 2,y] != null)
         {
           PanelType type1 = board[x,y].GetComponent<Panel>().myType;
           PanelType type2 = board[x + 1,y].GetComponent<Panel>().myType;
           PanelType type3 = board[x + 2,y].GetComponent<Panel>().myType;
+          
 
           if(type1 == type2 && type2 == type3)
           {
@@ -81,6 +84,28 @@ CheckMatches();
         }
       }
     }
+      for(int x = 0;x <= 5; x++)
+    {
+      for(int y = 0;y <= 6; y++)
+      {
+        if(board[x,y] != null && board[x ,y+ 1] != null && board[x ,y+ 2] != null)
+        {
+          PanelType type1 = board[x,y].GetComponent<Panel>().myType;
+          PanelType type2 = board[x ,y+ 1].GetComponent<Panel>().myType;
+          PanelType type3 = board[x ,y+ 2].GetComponent<Panel>().myType;
+
+          //縦に3つ並んでいるか調べる処理
+          //board[x,y + 1]のようにして縦を見れるようにする
+          
+
+          if(type1 == type2 && type2 == type3)
+          {
+            Debug.Log($"縦で三つそろった！種類:{type1}場所:({x},{y})");
+          }
+        }
+      }
+    }
+   
   }
   void Update()
   {
