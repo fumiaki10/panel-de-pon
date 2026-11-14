@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Shapes2D;
 using Unity.Collections;
 using Unity.Mathematics;
@@ -21,6 +22,8 @@ public class blocks:MonoBehaviour
 [System.NonSerialized]
 // ボードの作成
   public GameObject[,] board = new GameObject[6,9];
+
+ 
   
   void Start()
   {
@@ -65,7 +68,8 @@ CheckMatches();
   }
   void CheckMatches()
   {
-    // PanelType type = board[x,y].GetComponent<Panel>().myType;
+    // 消す予定のパネルを格納するリスト
+    List<Vector2Int> destroyPanel = new List<Vector2Int>();
     for(int x = 0;x <= 3; x++)
     {
       for(int y = 0;y <= 8; y++)
@@ -80,6 +84,9 @@ CheckMatches();
           if(type1 == type2 && type2 == type3)
           {
             Debug.Log($"横で三つそろった！種類:{type1}場所:({x},{y})");
+            destroyPanel.Add(new Vector2Int(x,y));
+            destroyPanel.Add(new Vector2Int(x+1,y));
+            destroyPanel.Add(new Vector2Int(x+2,y));
           }
         }
       }
@@ -101,11 +108,22 @@ CheckMatches();
           if(type1 == type2 && type2 == type3)
           {
             Debug.Log($"縦で三つそろった！種類:{type1}場所:({x},{y})");
+            destroyPanel.Add(new Vector2Int(x,y));
+            destroyPanel.Add(new Vector2Int(x,y+1));
+            destroyPanel.Add(new Vector2Int(x,y+2));
           }
         }
       }
     }
-   
+   foreach(var item in destroyPanel)
+    {
+      if(board[item.x,item.y] != null)
+      {
+        Destroy(board[item.x,item.y]);   
+        board[item.x,item.y] = null;
+      }
+
+    }
   }
   void Update()
   {
