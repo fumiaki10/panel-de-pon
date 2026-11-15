@@ -31,8 +31,24 @@ public class blocks:MonoBehaviour
     {
    for(int y = 0;y <= 7; y++)
       {
+       
         int randomBlocks = UnityEngine.Random.Range(0,PanelPrefabs.Length);
-          GameObject newBlock = Instantiate(PanelPrefabs[randomBlocks],new Vector3(x + 0.5f ,y + 0.5f),quaternion.identity);  
+         while(x >= 2 && 
+         (PanelPrefabs[randomBlocks].GetComponent<Panel>().myType == 
+         board[x-1,y].GetComponent<Panel>().myType && 
+         PanelPrefabs[randomBlocks].GetComponent<Panel>().myType ==
+         board[x - 2, y].GetComponent<Panel>().myType) 
+         || 
+         y >= 2 &&
+         (PanelPrefabs[randomBlocks].GetComponent<Panel>().myType == 
+         board[x,y -1].GetComponent<Panel>().myType && 
+         PanelPrefabs[randomBlocks].GetComponent<Panel>().myType ==
+         board[x, y -2].GetComponent<Panel>().myType))
+        {
+          randomBlocks = UnityEngine.Random.Range(0,PanelPrefabs.Length);
+        }
+          GameObject newBlock = Instantiate(PanelPrefabs[randomBlocks],new Vector3(x + 0.5f ,y + 0.5f),quaternion.identity);
+
           board[x,y] = newBlock;
 
       newBlock.transform.SetParent(this.transform);
