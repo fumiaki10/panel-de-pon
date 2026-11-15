@@ -78,8 +78,8 @@ public class blocks:MonoBehaviour
     {
       rightBlock.transform.position = new Vector3(leftX +0.5f , y+ 0.5f , 0f);
     }
-Debug.Log($"({cursorX},{cursorY})とのその右のブロックの入れ替えが完了");
-CheckMatches();
+
+  CheckMatches();
 
   }
   void CheckMatches()
@@ -139,6 +139,33 @@ CheckMatches();
         board[item.x,item.y] = null;
       }
 
+    }
+//パネルを消した後下にパネルが落ちるようにする
+for(int x = 0;x <= 5; x++)
+    {
+      for(int y = 0;y <= 6; y++)
+      {
+        if(board[x,y] == null)
+        {
+          for(int aboveY = y + 1;aboveY <= 7; aboveY++)
+          {
+            if(board[x,aboveY] != null)
+            {
+              // 順にboardをチェックして、nullだった場合その上のブロックを代入する
+              // 下から上に向かったyを0~7まで順番に見る
+              // もしboard[x,y]がnullだった場合、その真上(y + 1から一番上まで)を探す
+              // 上のほうで、最初に見つかった「からじゃないパネル(board[x,aboveY] != null)」を今見ているnull(空っぽの場所board[x,y]に引っ越しさせる)
+              // 引っ越しさせたら、元の場所board[x,aboveY]をnullにして、画面上の位置（transform.position）も新しいyの位置に更新
+
+              board[x,y] = board[x,aboveY];
+              board[x,aboveY] = null;
+
+              board[x,y].transform.position = new Vector3(x + 0.5f, y+ 0.5f , 0f);
+              break;
+            }
+          }
+        }
+      }
     }
   }
   void Update()
