@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 
-using Shapes2D;
-using Unity.Collections;
+using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.PlayerLoop;
+
  public enum PanelType
   {
     Circle,
@@ -72,10 +70,10 @@ public GameObject[,] board = new GameObject[6,9];
     {
       rightBlock.transform.position = new Vector3(leftX + 0.5f, y + 0.5f , 0f);
     }
-    CheckMatches();
+  StartCoroutine(CheckMatches());
   }
 
- void CheckMatches()
+ IEnumerator CheckMatches()
   {
     List<Vector2Int> destroyPanel = new List<Vector2Int>();
     for(int x = 0;x <= 3; x++)
@@ -113,21 +111,28 @@ public GameObject[,] board = new GameObject[6,9];
             destroyPanel.Add(new Vector2Int(x,y));
             destroyPanel.Add(new Vector2Int(x,y+1));
             destroyPanel.Add(new Vector2Int(x,y+2));
+
+          
           }
         }
       }
     }
 
-    foreach(var item in destroyPanel)
+   
+    if(destroyPanel.Count > 0)
+    {
+     
+       foreach(var item in destroyPanel)
     {
       if(board[item.x,item.y] != null)
       {
         Destroy(board[item.x,item.y]);
+        
         board[item.x,item.y] = null;
 
       }
     }
-
+yield return new WaitForSeconds(0.3f);
     for(int x = 0;x <= 5; x++)
     {
       for(int y = 0;y <= 8; y++)
@@ -148,9 +153,8 @@ public GameObject[,] board = new GameObject[6,9];
         }
       }
     }
-    if(destroyPanel.Count > 0)
-    {
-      CheckMatches();
+    yield return new WaitForSeconds(0.3f);
+     StartCoroutine(CheckMatches());
     }
   }
 
