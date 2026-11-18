@@ -76,6 +76,29 @@ public GameObject[,] board = new GameObject[6,9];
  IEnumerator CheckMatches()
   {
     List<Vector2Int> destroyPanel = new List<Vector2Int>();
+ for(int x = 0;x <= 5; x++)
+    {
+      for(int y = 0;y <= 8; y++)
+      {
+        if(board[x,y] == null)
+        {
+          for(int aboveY = y + 1;aboveY <= 8; aboveY++)
+          {
+            if(board[x,aboveY] != null)
+            {
+              board[x,y] = board[x,aboveY];
+              board[x,aboveY] = null;
+
+              board[x,y].transform.position = new Vector3(x + 0.5f, y+ 0.5f , 0f);
+              break;
+            }
+          }
+        }
+      }
+    }
+  yield return new WaitForSeconds(0.3f);
+
+
     for(int x = 0;x <= 3; x++)
     {
       for(int y = 0;y <= 8; y++)
@@ -117,7 +140,7 @@ public GameObject[,] board = new GameObject[6,9];
         }
       }
     }
-
+     
    
     if(destroyPanel.Count > 0)
     {
@@ -132,27 +155,8 @@ public GameObject[,] board = new GameObject[6,9];
 
       }
     }
-yield return new WaitForSeconds(0.3f);
-    for(int x = 0;x <= 5; x++)
-    {
-      for(int y = 0;y <= 8; y++)
-      {
-        if(board[x,y] == null)
-        {
-          for(int aboveY = y + 1;aboveY <= 8; aboveY++)
-          {
-            if(board[x,aboveY] != null)
-            {
-              board[x,y] = board[x,aboveY];
-              board[x,aboveY] = null;
 
-              board[x,y].transform.position = new Vector3(x + 0.5f, y+ 0.5f , 0f);
-              break;
-            }
-          }
-        }
-      }
-    }
+  
     yield return new WaitForSeconds(0.3f);
      StartCoroutine(CheckMatches());
     }
