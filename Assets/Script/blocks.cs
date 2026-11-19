@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using TMPro;
 
 using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
+using Unity.VisualScripting;
 
- public enum PanelType
+public enum PanelType
   {
     Circle,
     Diamond,
@@ -21,11 +23,19 @@ public class blocks:MonoBehaviour
  [System.NonSerialized]
 public GameObject[,] board = new GameObject[6,9];
 
+public TextMeshProUGUI scoreText;
+public TextMeshProUGUI comboText;
+int score = 0;
+int comboCount = 0;
+
+// [SerializeField] private TextMeshProUGUI scoreText;
 
  
   
   void Start()
   {
+
+
     for(int x = 0;x <= 5; x++)
     {
       for(int y = 0;y <= 7; y++)
@@ -70,6 +80,9 @@ public GameObject[,] board = new GameObject[6,9];
     {
       rightBlock.transform.position = new Vector3(leftX + 0.5f, y + 0.5f , 0f);
     }
+    // 4. プレイヤーが新しくパネルを入れ替えた瞬間、連鎖数（comboCount）を 0 にリセットする
+    comboCount = 0;
+
   StartCoroutine(CheckMatches());
   }
 
@@ -155,6 +168,14 @@ public GameObject[,] board = new GameObject[6,9];
 
       }
     }
+// 5. 連鎖数（comboCount）を +1 増やす
+comboCount++;
+// 6. スコアを加算する（例：消した数 × 100点 × 連鎖数）
+score += destroyPanel.Count * 100 * comboCount;
+// 7. 画面のテキスト（scoreText.text と comboText.text）を最新の数値に書き換える
+scoreText.text = $"SCORE:{score}";
+comboText.text = $"{comboCount}COMBO!";
+
 
   
     yield return new WaitForSeconds(0.3f);
